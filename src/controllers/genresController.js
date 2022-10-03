@@ -8,7 +8,13 @@ const genresController = {
     });
   },
   detail: (req, res) => {
-    db.Genre.findByPk(req.params.id).then((genre) => {
+    db.Genre.findByPk(req.params.id, {
+      include : [
+        {
+          association : 'movies'
+        }
+      ]
+    }).then((genre) => {
       res.render("genresDetail.ejs", { genre });
     });
   },

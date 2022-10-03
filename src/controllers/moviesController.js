@@ -66,7 +66,13 @@ const moviesController = {
     }).catch(error => console.log(error))
   },
   edit: function (req, res) {
-    let Movie = Movies.findByPk(req.params.id);
+    let Movie = Movies.findByPk(req.params.id, {
+      include : [
+        {
+          association : 'genre'
+        }
+      ]
+    });
     let allGenres = Genres.findAll({
         order : ['name']
     })
@@ -75,9 +81,9 @@ const moviesController = {
            .then(([Movie, allGenres]) => {
             //console.log(Movie)
             //console.log(allGenres);
-            console.log(moment(Movie.release_date).format(YYYY-MM-DD))
+            //return res.send(Movie)
             return res.render('moviesEdit', {
-              Movies,
+              Movie,
               allGenres,
               moment : moment
             })
@@ -99,12 +105,23 @@ const moviesController = {
         where : {
           id : req.params.id
         }
-      }.then(() => res.redirect('/movies/detail/' + req.params.id))
-      .catch(error => console.log(error))
+      }
     )
+    .then(() => res.redirect('/movies/detail/' + req.params.id))
+    .catch(error => console.log(error))
   },
-  delete: function (req, res) {},
-  destroy: function (req, res) {},
+  delete: function (req, res) {
+    const Movie = req.query;
+    res.render('moviesDelete', {Movie})
+  },
+  destroy: function (req, res) {
+    const {id} = req.params;
+    Movies.destroy({where:{id}})
+    .then(() => {
+      return res.redirect('/movies')
+    })
+    .catch(error => console.log(error))
+  },
 };
 
 module.exports = moviesController;
