@@ -19,9 +19,14 @@ const moviesController = {
     });
   },
   detail: (req, res) => {
-    db.Movie.findByPk(req.params.id).then((movie) => {
-      res.render("moviesDetail.ejs", { movie });
-    });
+    db.Movie.findByPk(req.params.id, {
+      include : ['genre', 'actors']
+    })
+      .then((movie) => {
+        return res.render("moviesDetail.ejs", { movie });
+    })
+      .catch(error => console.log(error))
+
   },
   new: (req, res) => {
     db.Movie.findAll({

@@ -18,11 +18,26 @@
     <p>LENGTH: <%= movie.length + ' min'%> </p>
     <p>RELEASE DATE: <%= movie.release_date %> </p>
     <br>
+    <h4>Género: <a href="/genres/detail/<%= movie.genre.id %>"><%= movie.genre.name %></a></h4>
+    <h4>Actores:</h4>
+    <% if (movie.actors.length) { %>
+      <ul>
+        <% movie.actors.forEach(actor => { %>
+         <li><a href="/actors/detail/<%= actor.id %>"><%= actor.first_name %> <%= actor.last_name %></a></li>
+        <% }) %>
+    </ul>
+    <% } else { %>
+        <p>La película no tiene actores</p>
+    <% } %>
+    <br><br>
     <section>
         <!--Aquí debe colocar los botones de Modificar - Borrar y Listado de Películas-->
         <a href="/movies/edit/<%= movie.id %>">Editar</a>
+        <br><br>
         <a href="/movies/delete?id=<%=movie.id %>&title=<%=movie.title %>">Eliminar</a>
     </section>
+    
+   
 
 </body>
 </html>
